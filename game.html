@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Type Anything Slowly</title>
+    <style>
+        body {
+            text-align: center;
+            margin-top: 50px;
+            font-family: sans-serif;
+        }
+        textarea {
+            width: 400px;
+            height: 200px;
+            font-size: 20px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Type anything slowly</h2>
+
+<textarea id="area" cols="40" rows="10" oninput="typeFake()"></textarea>
+
+<script>
+    let text = "tôi là 1 đứa ngốc";
+
+    // 2. Chuyển chuỗi thành mảng các ký tự (để dễ thao tác từng chữ)
+    // Kết quả: arr = ['t', 'ô', 'i', ' ', 'l', 'à', ...]
+    let arr = text.split("");
+
+    // 3. Khai báo biến chuỗi rỗng để chứa kết quả hiển thị
+    let str = "";
+
+    // 4. Biến đếm để biết đang hiện đến chữ cái thứ mấy
+    let count = 0;
+
+    function typeFake() {
+        // Lấy thẻ textarea
+        let t = document.getElementById("area");
+
+        // Logic chính:
+        if (count < arr.length) {
+            // Nếu chưa hiện hết câu:
+            // Cộng thêm ký tự tiếp theo vào chuỗi kết quả
+            str = str + arr[count];
+            count++;
+        } else {
+            str = "";
+            count = 0;
+        }
+
+        t.value = str;
+    }
+</script>
+
+</body>
+</html>
