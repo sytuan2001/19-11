@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Caro Đơn Giản</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        /* Trang trí cho bàn cờ */
+        #game-board {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        #game-board td {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #333;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+        /* Màu sắc cho X và O */
+        .x-move { color: red; font-weight: bold; }
+        .o-move { color: blue; font-weight: bold; }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Cờ Caro Đơn Giản</h1>
+<p id="status">Lượt chơi: X</p>
+
+<table id="game-board"></table>
+
+<br>
+<button onclick="resetGame()">Chơi lại</button>
+
+<script>
+    // Cấu hình
+    const SIZE = 5; // Kích thước bàn cờ 5x5
+    let board = []; // Mảng 2 chiều lưu dữ liệu
+    let currentPlayer = 'X'; // Người chơi hiện tại
+    let isGameOver = false;
+
+    // 1. Khởi tạo mảng 2 chiều và vẽ bàn cờ ban đầu
+    function init() {
+        board = [];
+        for (let i = 0; i < SIZE; i++) {
+            board[i] = [];
+            for (let j = 0; j < SIZE; j++) {
+                board[i][j] = "."; // Mặc định là dấu chấm theo đề bài
+            }
+        }
+        drawBoard();
+        isGameOver = false;
+        currentPlayer = 'X';
+        document.getElementById('status').innerText = "Lượt chơi: " + currentPlayer;
+    }
+
+    // 2. Hàm vẽ bàn cờ từ mảng dữ liệu ra màn hình
+    function drawBoard() {
+        let tableContent = "";
+        for (let i = 0; i < SIZE; i++) {
+            tableContent += "<tr>";
+            for (let j = 0; j < SIZE; j++) {
+                // Tạo ô bảng và gắn sự kiện onclick
+                let value = board[i][j] === '.' ? '&nbsp;' : board[i][j]; // Hiển thị khoảng trắng nếu là dấu chấm cho đẹp, hoặc để nguyên dấu chấm nếu muốn giống hệt đề.
+
+                // Ở đây mình để hiển thị đúng giá trị trong mảng để bạn dễ hình dung
+                tableContent += `<td onclick="play(${i}, ${j})">${board[i][j]}</td>`;
+            }
+            tableContent += "</tr>";
+        }
+        document.getElementById("game-board").innerHTML = tableContent;
+    }
+
+    // 3. Hàm xử lý khi người chơi click vào ô
+    function play(i, j) {
+        // Nếu game đã kết thúc hoặc ô đã được đánh thì không làm gì
+        if (isGameOver || board[i][j] !== ".") {
+            return;
+        }
+
+        // Cập nhật mảng 2 chiều
+        board[i][j] = currentPlayer;
+
+        // Vẽ lại bàn cờ để hiển thị nước đi mới
+        drawBoard();
+
+        // Kiểm tra chiến thắng
+        if (checkWin()) {
+            document.getElementById('status').innerText = `Người chơi ${currentPlayer} thắng!`;
+            isGameOver = true;
+            setTimeout(() => alert(`Chúc mừng! ${currentPlayer} đã chiến thắng`), 100);
+        } else {
+            // Đổi lượt người chơi
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('status').innerText = "Lượt chơi: " + currentPlayer;
+        }
+    }
+
+    // 4. Hàm kiểm tra chiến thắng (3 ô liên tiếp)
+    function checkWin() {
+        for (let i = 0; i < SIZE; i++) {
+            for (let j = 0; j < SIZE; j++) {
+                let cell = board[i][j];
+                if (cell === ".") continue; // Bỏ qua ô trống
+
+                // Kiểm tra hàng ngang (cần còn đủ 2 ô bên phải)
+                if (j + 2 < SIZE &&
+                    cell === board[i][j+1] &&
+                    cell === board[i][j+2]) {
+                    return true;
+                }
+
+                // Kiểm tra hàng dọc (cần còn đủ 2 ô bên dưới)
+                if (i + 2 < SIZE &&
+                    cell === board[i+1][j] &&
+                    cell === board[i+2][j]) {
+                    return true;
+                }
+
+                // Kiểm tra đường chéo chính (xuống phải)
+                if (i + 2 < SIZE && j + 2 < SIZE &&
+                    cell === board[i+1][j+1] &&
+                    cell === board[i+2][j+2]) {
+                    return true;
+                }
+
+                // Kiểm tra đường chéo phụ (xuống trái)
+                if (i + 2 < SIZE && j - 2 >= 0 &&
+                    cell === board[i+1][j-1] &&
+                    cell === board[i+2][j-2]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Hàm chơi lại
+    function resetGame() {
+        init();
+    }
+
+    // Chạy hàm khởi tạo khi trang load xong
+    init();
+</script>
+
+</body>
+</html>
