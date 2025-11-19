@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Từ Điển Anh-Việt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            min-height: 60px;
+            font-size: 18px;
+        }
+
+        .found {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .not-found {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .word-list {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9;
+            border-radius: 10px;
+        }
+
+        .word-list h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .word-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .word-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📖 Từ Điển Anh-Việt</h1>
+
+    <div class="search-box">
+        <label>Nhập từ tiếng Anh cần tra:</label>
+        <input type="text" id="tuCanTim" placeholder="Ví dụ: hello, world, computer...">
+        <button onclick="timTu()">Tìm Kiếm</button>
+    </div>
+
+    <div class="result" id="ketQua"></div>
+
+    <div class="word-list">
+        <h3>📚 Danh sách từ có sẵn:</h3>
+        <div id="danhSachTu"></div>
+    </div>
+</div>
+
+<script>
+    // MẢNG 1: Lưu trữ các từ tiếng Anh
+    var tuTiengAnh = [
+        'hello',
+        'world',
+        'computer',
+        'programming',
+        'javascript',
+        'array',
+        'function',
+        'variable',
+        'loop',
+        'dictionary',
+        'language',
+        'translate',
+        'search',
+        'student',
+        'teacher'
+    ];
+
+    // MẢNG 2: Lưu trữ các từ tiếng Việt tương ứng
+    var tuTiengViet = [
+        'xin chào',
+        'thế giới',
+        'máy tính',
+        'lập trình',
+        'ngôn ngữ JavaScript',
+        'mảng',
+        'hàm',
+        'biến',
+        'vòng lặp',
+        'từ điển',
+        'ngôn ngữ',
+        'dịch',
+        'tìm kiếm',
+        'học sinh',
+        'giáo viên'
+    ];
+
+    // Hiển thị danh sách từ khi trang load
+    function hienThiDanhSach() {
+        var html = '';
+        for (var i = 0; i < tuTiengAnh.length; i++) {
+            html += '<div class="word-item">' +
+                '<strong>' + tuTiengAnh[i] + '</strong> - ' + tuTiengViet[i] +
+                '</div>';
+        }
+        document.getElementById('danhSachTu').innerHTML = html;
+    }
+
+    // Hàm tìm kiếm từ
+    function timTu() {
+        // Lấy từ người dùng nhập vào
+        var tuCanTim = document.getElementById('tuCanTim').value.toLowerCase().trim();
+
+        // Kiểm tra nếu không nhập gì
+        if (tuCanTim == '') {
+            document.getElementById('ketQua').innerHTML =
+                '<span class="not-found">Vui lòng nhập từ cần tra!</span>';
+            return;
+        }
+
+        // Tìm vị trí của từ tiếng Anh trong mảng 1
+        var viTri = -1;
+        for (var i = 0; i < tuTiengAnh.length; i++) {
+            if (tuTiengAnh[i] == tuCanTim) {
+                viTri = i;
+                break;
+            }
+        }
+
+        // Nếu tìm thấy, hiển thị từ tiếng Việt tương ứng từ mảng 2
+        if (viTri != -1) {
+            document.getElementById('ketQua').innerHTML =
+                '<span class="found">✅ Kết quả:</span><br>' +
+                '<strong style="font-size: 24px;">"' + tuCanTim + '"</strong> = ' +
+                '<strong style="font-size: 24px; color: #667eea;">' + tuTiengViet[viTri] + '</strong>';
+        } else {
+            // Nếu không tìm thấy
+            document.getElementById('ketQua').innerHTML =
+                '<span class="not-found">❌ Không tìm thấy!</span><br>' +
+                'Từ "<strong>' + tuCanTim + '</strong>" không có trong từ điển.';
+        }
+
+        // Xóa ô input
+        document.getElementById('tuCanTim').value = '';
+    }
+
+    // Cho phép nhấn Enter để tìm
+    document.getElementById('tuCanTim').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            timTu();
+        }
+    });
+
+    // Hiển thị danh sách từ khi trang load
+    hienThiDanhSach();
+</script>
+</body>
+</html>
